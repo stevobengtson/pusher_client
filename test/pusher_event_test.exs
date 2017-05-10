@@ -7,7 +7,7 @@ defmodule PusherClient.EventTest do
 
   setup do
     new JSX
-    on_exit fn -> unload end
+    on_exit fn -> unload() end
     :ok
   end
 

@@ -17,7 +17,7 @@ defmodule PusherClient.WSHandlerTest do
   setup do
     new JSX
     new PusherEvent
-    on_exit fn -> unload end
+    on_exit fn -> unload() end
     :ok
   end
 
@@ -43,7 +43,7 @@ defmodule PusherClient.WSHandlerTest do
   end
 
   test "handle connection established event" do
-    state = %State{stream_to: self}
+    state = %State{stream_to: self()}
     socket_id = "87381"
     event = %{
                "event" => "pusher:connection_established",
@@ -53,13 +53,13 @@ defmodule PusherClient.WSHandlerTest do
     expect(JSX, :decode, 1, {:ok, event["data"]})
 
     assert websocket_handle({:text, :event}, :conn_state, state) ==
-      { :ok, %State{stream_to: self, socket_id: socket_id} }
+      { :ok, %State{stream_to: self(), socket_id: socket_id} }
 
     assert validate JSX
   end
 
   test "handle subscription succeeded event" do
-    state = %State{stream_to: self}
+    state = %State{stream_to: self()}
     channel = "public-channel"
     event = %{
                "event" => "pusher_internal:subscription_succeeded",
@@ -78,7 +78,7 @@ defmodule PusherClient.WSHandlerTest do
   end
 
   test "handle other events with encoded data" do
-    state = %State{stream_to: self}
+    state = %State{stream_to: self()}
     channel = "public-channel"
     event = %{
                "event" => "message",
@@ -97,7 +97,7 @@ defmodule PusherClient.WSHandlerTest do
   end
 
   test "handle other events with non encoded data" do
-    state = %State{stream_to: self}
+    state = %State{stream_to: self()}
     channel = "public-channel"
     event = %{
                "event" => "message",
